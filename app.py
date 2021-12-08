@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request
 import requests
-from dotenv import load_dotenv
-load_dotenv()
 app = Flask(__name__)
 
 bearer_token = "AAAAAAAAAAAAAAAAAAAAAPYVWgEAAAAAidkkoJ72QjFjmNHwoWHb5rtwagE%3DVjHzdiYMqPcEMuCTWmURKcvf2lardEydnKd34QZMrMHtBFcy51"
