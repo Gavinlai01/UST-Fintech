@@ -1,4 +1,2 @@
 Flask
-python-dotenv
 requests
-os
