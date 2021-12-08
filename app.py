@@ -28,16 +28,13 @@ def create_url(id):
     user_id = id
     return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
 
-
 def get_params():
     return {"tweet.fields": "created_at"}
-
 
 def bearer_oauth(r):
     r.headers["Authorization"] = f"Bearer {bearer_token}"
     r.headers["User-Agent"] = "v2UserTweetsPython"
     return r
-
 
 def connect_to_endpoint(url, params):
     response = requests.request("GET", url, auth=bearer_oauth, params=params)
@@ -50,19 +47,20 @@ def connect_to_endpoint(url, params):
         )
     return response.json()
 
-API_URL = "https://api-inference.huggingface.co/models/ProsusAI/finbert"
-headers = {"Authorization": f"Bearer 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"}
 def query(payload):
+    API_URL = "https://api-inference.huggingface.co/models/ProsusAI/finbert"
+    headers = {"Authorization": f"Bearer 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"}
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
 
 @app.route('/')
-def finnhub():
-    input = "there is a shortage of capital, and we need extra financing"
-    output = query({"inputs": input})
-    for a in output:
-        print(a[0])
-    return render_template('finnhub.html',title='Finbert News')
+def home():
+    text = "there is a shortage of capital, and we need extra financing"
+    output = query({"inputs": text})
+    result = []
+    output[0].append({'text': text})
+    result.append(output[0])
+    return render_template('finnhub.html',title='Finbert News', data=result)
 
 @app.route('/twitter')
 def twitter():
