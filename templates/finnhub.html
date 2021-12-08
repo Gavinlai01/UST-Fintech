@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <!--th>Time</th-->
+        <th>Sentence</th>
+        <th>Positive</th>
+        <th>Negative</th>
+        <th>Netural</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in data %}
+        <tr>
+          <!--td>{{ user[3]['created_at'] }}</td-->
+          <td>{{ user[3]['text'] }}</td>
+          <td>{{ "{:.2%}".format(user[0]['score']) }}</td>
+          <td>{{ "{:.2%}".format(user[1]['score']) }}</td>
+          <td>{{ "{:.2%}".format(user[2]['score']) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        columns: [
+          null,
+          {searchable: false},
+          {orderable: false, searchable: false},
+          {orderable: false, searchable: false},
+          null],
+      });
+    });
+  </script>
+{% endblock %}
