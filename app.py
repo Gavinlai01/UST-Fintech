@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request
 import requests
-import os
 from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 
-bearer_token = os.getenv('BEARER_TOKEN')
+bearer_token = "AAAAAAAAAAAAAAAAAAAAAPYVWgEAAAAAidkkoJ72QjFjmNHwoWHb5rtwagE%3DVjHzdiYMqPcEMuCTWmURKcvf2lardEydnKd34QZMrMHtBFcy51"
+
 
 def connect_to_endpoint_user(url):
     response = requests.request("GET", url, auth=bearer_oauth,)
