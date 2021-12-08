@@ -1,14 +1,11 @@
 from flask import Flask, render_template, request
-
-import requests
-app = Flask(__name__)
-
 import requests
 import os
-import json
-import requests
+from dotenv import load_dotenv
+load_dotenv()
+app = Flask(__name__)
 
-bearer_token = "AAAAAAAAAAAAAAAAAAAAAPYVWgEAAAAAidkkoJ72QjFjmNHwoWHb5rtwagE%3DVjHzdiYMqPcEMuCTWmURKcvf2lardEydnKd34QZMrMHtBFcy51"
+bearer_token = os.getenv('BEARER_TOKEN')
 
 def connect_to_endpoint_user(url):
     response = requests.request("GET", url, auth=bearer_oauth,)
@@ -78,11 +75,9 @@ def twitter():
     result = []
     for tweet in json_response["data"]:
       text = tweet["text"]
-      #print(text)
       output = query({"inputs": text})
       output[0].append(tweet)
       result.append(output[0])
-      #print(json.dumps(output, indent=4, sort_keys=True))
     return render_template('twitter.html',title='Twitter', data=result)
 
 if __name__ == '__main__':
