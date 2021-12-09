@@ -2,6 +2,21 @@
 
 {% block content %}
   <a href="/twitter?author=FinancialNews">Twitter</a>
+  <body>   
+    <div>
+        <h5>Input Your Sentence</h5>
+        <input type='text' id='sentence' style="width: 80%; height: 0%"/>
+        <input type='button' value='Search' onclick='redirectPage()' />
+    </div>
+  </body>
+
+  <script>
+  let redirectPage = () => {
+      let v1 = document.getElementById('sentence');
+      const url = "/?sentence=" + v1.value
+      window.location.href = url;
+  }
+  </script>
   <table id="data" class="table table-striped">
     <thead>
       <tr>

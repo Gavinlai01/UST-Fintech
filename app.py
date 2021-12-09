@@ -53,7 +53,10 @@ def query(payload):
 
 @app.route('/')
 def home():
-    text = "there is a shortage of capital, and we need extra financing"
+    if request.args.get('sentence'):
+        text = request.args.get('sentence')
+    else:
+        text = "there is a shortage of capital, and we need extra financing"
     output = query({"inputs": text})
     result = []
     output[0].append({'text': text})
