@@ -9,11 +9,13 @@ def connect_to_endpoint_user(url):
     response = requests.request("GET", url, auth=bearer_oauth,)
     print(response.status_code)
     if response.status_code != 200:
-        raise Exception(
-            "Request returned an error: {} {}".format(
-                response.status_code, response.text
-            )
-        )
+        return False
+        #raise Exception(
+        #    "Request returned an error: {} {}".format(
+        #        response.status_code, response.text
+        #    )
+        #)
+        
     return response.json()
 
 def create_url_user(author):
@@ -61,13 +63,28 @@ def home():
     result = []
     output[0].append({'text': text})
     result.append(output[0])
-    return render_template('finnhub.html',title='Finbert News', data=result)
+    return render_template('home.html', data=result)
+
+@app.route('/sentence')
+def sentence():
+    if request.args.get('sentence'):
+        text = request.args.get('sentence')
+    else:
+        text = "there is a shortage of capital, and we need extra financing"
+    output = query({"inputs": text})
+    result = []
+    output[0].append({'text': text})
+    result.append(output[0])
+    return render_template('sentence.html',title='One Sentence Analysis', data=result)
 
 @app.route('/twitter')
 def twitter():
     author = request.args.get('author')
     url = create_url_user(author)
-    json_response = connect_to_endpoint_user(url)
+    if connect_to_endpoint_user(url): 
+        json_response = connect_to_endpoint_user(url)
+    else:
+        return render_template('InvalidUser.html',title='Error', id=author)
     url = create_url(json_response["data"][0]['id'])
     params = get_params()
     json_response = connect_to_endpoint(url, params)
@@ -77,7 +94,7 @@ def twitter():
       output = query({"inputs": text})
       output[0].append(tweet)
       result.append(output[0])
-    return render_template('twitter.html',title='Twitter', data=result)
+    return render_template('twitter.html',title='Tweet Analysis', data=result)
 
 if __name__ == '__main__':
     app.run()

@@ -1,21 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <a href="/twitter?author=FinancialNews">Twitter</a>
-  <body>   
-    <div>
-        <input type='text' id='sentence' placeholder="Please input your sentense..." style="width: 80%;"/>
-        <input type='button' value='Search' onclick='redirectPage()' />
-    </div>
-  </body>
-
-  <script>
-  let redirectPage = () => {
-      let v1 = document.getElementById('sentence');
-      const url = "/?sentence=" + v1.value
-      window.location.href = url;
-  }
-  </script>
+  <!--a href="/twitter?author=FinancialNews">Twitter</a-->
   <table id="data" class="table table-striped">
     <thead>
       <tr>

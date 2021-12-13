@@ -1,8 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <!--a href="/twitter?author=FinancialNews">Twitter</a-->
   <p>&#160;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p></p>
   <h3>{{ title }}</h3>
+  <body>   
+    <form class="d-flex">
+      <input class="form-control me-2" type="text" placeholder="Please input your sentense..." aria-label="Search" id="sentence">
+      <button class="btn btn-outline-success" type="button" onclick="redirectPage()">Search</button>
+    </form>
+  </body>
+
+  <script>
+  let redirectPage = () => {
+      let v2 = document.getElementById('sentence');
+      const url = "sentence/?sentence=" + v2.value
+      window.location.href = url;
+  }
+  </script>
   <table id="data" class="table table-striped">
     <thead>
       <tr>
