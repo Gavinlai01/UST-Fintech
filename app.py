@@ -7,16 +7,13 @@ bearer_token = "AAAAAAAAAAAAAAAAAAAAAPYVWgEAAAAAidkkoJ72QjFjmNHwoWHb5rtwagE%3DVj
 
 def connect_to_endpoint_user(url):
     response = requests.request("GET", url, auth=bearer_oauth,)
-    print(response.status_code)
     if response.status_code != 200:
-        return False
-        #raise Exception(
-        #    "Request returned an error: {} {}".format(
-        #        response.status_code, response.text
-        #    )
-        #)
-        
-    return response.json()
+        raise Exception(
+            "Request returned an error: {} {}".format(
+                response.status_code, response.text
+            )
+        ) 
+    return response
 
 def create_url_user(author):
     usernames = "usernames=" + author
@@ -40,11 +37,7 @@ def connect_to_endpoint(url, params):
     response = requests.request("GET", url, auth=bearer_oauth, params=params)
     print(response.status_code)
     if response.status_code != 200:
-        raise Exception(
-            "Request returned an error: {} {}".format(
-                response.status_code, response.text
-            )
-        )
+        return False
     return response.json()
 
 def query(payload):
@@ -81,20 +74,26 @@ def sentence():
 def twitter():
     author = request.args.get('author')
     url = create_url_user(author)
-    if connect_to_endpoint_user(url): 
-        json_response = connect_to_endpoint_user(url)
-    else:
+    userid = connect_to_endpoint_user(url)
+    if userid.status_code != 200:
         return render_template('InvalidUser.html',title='Error', id=author)
-    url = create_url(json_response["data"][0]['id'])
-    params = get_params()
-    json_response = connect_to_endpoint(url, params)
-    result = []
-    for tweet in json_response["data"]:
-      text = tweet["text"]
-      output = query({"inputs": text})
-      output[0].append(tweet)
-      result.append(output[0])
-    return render_template('twitter.html',title='Tweet Analysis', data=result)
+    else:
+        json_response = userid.json()
+        url = create_url(json_response["data"][0]['id'])
+        params = get_params()
+        json_response = connect_to_endpoint(url, params)
+        result = []
+        for tweet in json_response["data"]:
+            text = tweet["text"]
+            output = query({"inputs": text})
+            output[0].append(tweet)
+            result.append(output[0])
+        return render_template('twitter.html',title='Tweet Analysis', data=result, author=author)
+
+@app.route('/mannul')
+def mannul():
+    return render_template('mannul.html',title='User Mannul')
+
 
 if __name__ == '__main__':
     app.run()
