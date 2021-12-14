@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!--a href="/twitter?author=FinancialNews">Twitter</a-->
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <!--th>Time</th-->
         <th>Sentence</th>
         <th>Positive</th>
         <th>Negative</th>
@@ -15,7 +13,6 @@
     <tbody>
       {% for user in data %}
         <tr>
-          <!--td>{{ user[3]['created_at'] }}</td-->
           <td>{{ user[3]['text'] }}</td>
           <td>{{ "{:.2%}".format(user[0]['score']) }}</td>
           <td>{{ "{:.2%}".format(user[1]['score']) }}</td>

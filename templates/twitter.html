@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>&#160;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p></p>
   <h3>{{ title }}</h3>
   <h5>Author ID: {{ author }}</h5>
+  <form class="d-flex ms-auto float-right">
+    <input class="form-control me-2" type="text" placeholder="Twitter Author ID" aria-label="Search" id="author">
+    <button class="btn btn-outline-success" type="button" onclick="redirectPage()">Search</button>
+  </form>
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <!--th>Time</th-->
         <th>Sentence</th>
         <th>Positive</th>
         <th>Negative</th>
@@ -17,7 +19,6 @@
     <tbody>
       {% for user in data %}
         <tr>
-          <!--td>{{ user[3]['created_at'] }}</td-->
           <td>{{ user[3]['text'] }}</td>
           <td>{{ "{:.2%}".format(user[0]['score']) }}</td>
           <td>{{ "{:.2%}".format(user[1]['score']) }}</td>

@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>&#160;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p></p>
     <h3>{{ title }}</h3>
     <h4 class="mt-4">One-Sentence Analysis</h4>
     <p class="lead">Users just need to input one sentence for sentiment Analysis.</p>
     <h4 class="mt-4">Tweet Analysis</h4>
     <p class="lead">Users need to find the author id for sentiment analysis for the latest 10 tweets.</p>
-    <!--img src="{{url_for('static', filename='author.png')}}" alt="Italian Trulli"-->
     <figure class="figure">
       <img src="{{url_for('static', filename='ID.png')}}" height="300" class="figure-img rounded" alt="A generic square placeholder image with rounded corners in a figure.">
       <figcaption class="figure-caption">Twitter user profile page.</figcaption>

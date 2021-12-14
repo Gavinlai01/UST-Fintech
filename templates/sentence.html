@@ -1,27 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!--a href="/twitter?author=FinancialNews">Twitter</a-->
-  <p>&#160;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p></p>
   <h3>{{ title }}</h3>
   <body>   
     <form class="d-flex">
       <input class="form-control me-2" type="text" placeholder="Please input your sentense..." aria-label="Search" id="sentence">
-      <button class="btn btn-outline-success" type="button" onclick="redirectPage()">Search</button>
+      <button class="btn btn-outline-success" type="button" onclick="redirectPage_sentence()">Search</button>
     </form>
   </body>
 
   <script>
-  let redirectPage = () => {
+  let redirectPage_sentence = () => {
       let v2 = document.getElementById('sentence');
-      const url = "sentence/?sentence=" + v2.value
+      const url = "?sentence=" + v2.value
       window.location.href = url;
   }
   </script>
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <!--th>Time</th-->
         <th>Sentence</th>
         <th>Positive</th>
         <th>Negative</th>
@@ -31,7 +28,6 @@
     <tbody>
       {% for user in data %}
         <tr>
-          <!--td>{{ user[3]['created_at'] }}</td-->
           <td>{{ user[3]['text'] }}</td>
           <td>{{ "{:.2%}".format(user[0]['score']) }}</td>
           <td>{{ "{:.2%}".format(user[1]['score']) }}</td>
