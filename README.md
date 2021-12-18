@@ -1,4 +1,4 @@
-#Sentiment Analysis with FinBERT
+# Sentiment Analysis with FinBERT
 There two function on this applicaiton, which is one-sentence analysis and tweet analysis.
 
 ### Prerequisite
