@@ -51,7 +51,7 @@ def home():
     if request.args.get('sentence'):
         text = request.args.get('sentence')
     else:
-        text = "there is a shortage of capital, and we need extra financing"
+        text = "Powell Declares Inflation Big Threat as Fed Signals Rate Hikes"
     output = query({"inputs": text})
     result = []
     output[0].append({'text': text})
@@ -63,7 +63,7 @@ def sentence():
     if request.args.get('sentence'):
         text = request.args.get('sentence')
     else:
-        text = "there is a shortage of capital, and we need extra financing"
+        text = "Powell Declares Inflation Big Threat as Fed Signals Rate Hikes"
     output = query({"inputs": text})
     result = []
     output[0].append({'text': text})
