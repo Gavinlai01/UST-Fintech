@@ -1,7 +1,6 @@
---upgrade pip
 Flask
 requests
 joblib
 pandas
 wheel
-talib
+talib-binary
