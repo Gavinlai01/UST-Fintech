@@ -2,4 +2,4 @@ Flask
 requests
 joblib
 pandas
-TA-Lib
+ta-lib
