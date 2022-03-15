@@ -3,4 +3,4 @@ requests
 joblib
 pandas
 wheel
-TA-Lib
+TA_Lib-0.4.10-cp27-cp27m-win_amd64.whl
