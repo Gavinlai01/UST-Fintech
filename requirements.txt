@@ -3,4 +3,3 @@ requests
 joblib
 pandas
 TA-Lib
-json
