@@ -2,5 +2,3 @@ Flask
 requests
 joblib
 pandas
-wheel
-ta-lib
