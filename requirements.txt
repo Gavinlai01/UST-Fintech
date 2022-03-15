@@ -3,4 +3,4 @@ requests
 joblib
 pandas
 wheel
-talib-binary
+TA-Lib
