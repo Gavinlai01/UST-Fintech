@@ -3,3 +3,4 @@ requests
 joblib
 pandas
 TA-Lib
+sklearn
