@@ -9,8 +9,9 @@ import json
 app = Flask(__name__)
 
 tree_clf = joblib.load('model/Tree_classifier.pkl')
-MLP_clf = joblib.load('model/MLP_classifier.pkl')
+#MLP_clf = joblib.load('model/MLP_classifier.pkl')
 Logistic_clf = joblib.load('model/Logistic_classifier.pkl')
+NB_clf = joblib.load('model/Naive Bayes.pkl')
 bearer_token = "AAAAAAAAAAAAAAAAAAAAAPYVWgEAAAAAidkkoJ72QjFjmNHwoWHb5rtwagE%3DVjHzdiYMqPcEMuCTWmURKcvf2lardEydnKd34QZMrMHtBFcy51"
 
 
@@ -58,7 +59,7 @@ def query(payload):
 app = Flask(__name__)
 
 def GetData():
-    url = 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=USD&limit=208&toTs=-1&api_key=375a206b8c4f0033b8e53cd69e94931844c8f621775dcfd04740d9bfeb3e0e59'
+    url = 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=USD&limit=213&toTs=-1&api_key=375a206b8c4f0033b8e53cd69e94931844c8f621775dcfd04740d9bfeb3e0e59'
     resp = requests.get(url=url).json()
     data = pd.DataFrame.from_dict(resp["Data"]["Data"])
     data['datetime'] = pd.to_datetime(data['time'], unit='s')
@@ -92,12 +93,12 @@ def TreeModel(Data):
     Data_np = Data.to_numpy()
     Prediction = pd.DataFrame(tree_clf.predict(Data_np[:, 7:]), columns = ['decision'])
     return Prediction
-
+"""
 def MLPModel(Data):
     Data_np = Data.to_numpy()
     Prediction = pd.DataFrame(MLP_clf.predict(Data_np[:, 13:22]), columns = ['decision'])
     return Prediction
-
+"""
 def LogisticModel(Data):
     Data_np = Data.to_numpy()
     Prediction = pd.DataFrame(Logistic_clf.predict(Data_np[:, 7:]), columns = ['decision'])
@@ -105,7 +106,7 @@ def LogisticModel(Data):
 
 def NBModel(Data):
     Data_np = Data.to_numpy()
-    Prediction = pd.DataFrame(Logistic_clf.predict(Data_np[:, 7:]), columns = ['decision'])
+    Prediction = pd.DataFrame(NB_clf.predict(Data_np[:, 7:]), columns = ['decision'])
     return Prediction
 
 def ResultProcessing(Prediction,Data_np, Data):
@@ -134,7 +135,7 @@ def main():
     Prediction = TreeModel(Data)
     json_reulst = ResultProcessing(Prediction, Data_np, Data)
     return render_template('tree.html', data=json_reulst)
-
+"""
 @app.route('/mlp')
 def MLP():
     Data = GetData()
@@ -142,7 +143,7 @@ def MLP():
     Prediction = MLPModel(Data)
     json_reulst = ResultProcessing(Prediction, Data_np, Data)
     return render_template('mlp.html', data=json_reulst)
-
+"""
 @app.route('/logistic')
 def Logistic():
     Data = GetData()
