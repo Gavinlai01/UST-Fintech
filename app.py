@@ -58,7 +58,7 @@ def query(payload):
 app = Flask(__name__)
 
 def GetData():
-    url = 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=USD&limit=203&toTs=-1&api_key=375a206b8c4f0033b8e53cd69e94931844c8f621775dcfd04740d9bfeb3e0e59'
+    url = 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=USD&limit=208&toTs=-1&api_key=375a206b8c4f0033b8e53cd69e94931844c8f621775dcfd04740d9bfeb3e0e59'
     resp = requests.get(url=url).json()
     data = pd.DataFrame.from_dict(resp["Data"]["Data"])
     data['datetime'] = pd.to_datetime(data['time'], unit='s')
