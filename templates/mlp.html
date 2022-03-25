@@ -6,9 +6,11 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
-        <th>Datetime</th>
+        <th>Datetime (UTC)</th>
         <th>Prediction</th>
         <th>Close Price</th>
+        <th>Upper Threshold</th>
+        <th>Lower Threshold</th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +19,8 @@
           <td>{{ user['Datetime'] }}</td>
           <td>{{ user['decision'] }}</td>
           <td>{{ user['close'] }}</td>
+          <td>{{ user['Upper'] }}</td>
+          <td>{{ user['Lower'] }}</td>
         </tr>
       {% endfor %}
     </tbody>

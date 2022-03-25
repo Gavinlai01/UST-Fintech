@@ -59,7 +59,7 @@ def query(payload):
 app = Flask(__name__)
 
 def GetData():
-    url = 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=USD&limit=203&toTs=-1&api_key=375a206b8c4f0033b8e53cd69e94931844c8f621775dcfd04740d9bfeb3e0e59'
+    url = 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=BTC&tsym=USD&limit=223&toTs=-1&api_key=375a206b8c4f0033b8e53cd69e94931844c8f621775dcfd04740d9bfeb3e0e59'
     resp = requests.get(url=url).json()
     data = pd.DataFrame.from_dict(resp["Data"]["Data"])
     data['datetime'] = pd.to_datetime(data['time'], unit='s')
@@ -123,8 +123,14 @@ def ResultProcessing(Prediction,Data_np, Data):
         elif row['decision'] == -1:
             return 'Sell'
         elif row['decision'] == 0:
-            return 'No decision'
+            return 'Hold'
     Prediction['decision'] = Prediction.apply(lambda row: Tostr(row), axis=1)
+    def Upper(row):
+        return row['close'] * (1+0.005)
+    Prediction['Upper'] = Prediction.apply(lambda row: Upper(row), axis=1)
+    def Lower(row):
+        return row['close'] * (1-0.005)
+    Prediction['Lower'] = Prediction.apply(lambda row: Lower(row), axis=1)
     result = Prediction.astype(str).to_json(orient="records")
     return json.loads(result)
 
