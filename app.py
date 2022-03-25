@@ -126,10 +126,10 @@ def ResultProcessing(Prediction,Data_np, Data):
             return 'Hold'
     Prediction['decision'] = Prediction.apply(lambda row: Tostr(row), axis=1)
     def Upper(row):
-        return row['close'] * (1+0.005)
+        return round(row['close'] * (1+0.005),2)
     Prediction['Upper'] = Prediction.apply(lambda row: Upper(row), axis=1)
     def Lower(row):
-        return row['close'] * (1-0.005)
+        return round(row['close'] * (1-0.005),2)
     Prediction['Lower'] = Prediction.apply(lambda row: Lower(row), axis=1)
     result = Prediction.astype(str).to_json(orient="records")
     return json.loads(result)
