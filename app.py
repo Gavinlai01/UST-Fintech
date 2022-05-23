@@ -5,14 +5,46 @@ import pandas as pd
 import requests
 import talib
 import json
+import yfinance as yf
+import numpy as np
+from pypfopt import EfficientFrontier
+from pypfopt import risk_models
+from pypfopt import expected_returns
+from pypfopt import DiscreteAllocation
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
 
-tree_clf = joblib.load('model/Tree_classifier.pkl')
+tree_clf = joblib.load('model/tree_classifier.pkl')
 #MLP_clf = joblib.load('model/MLP_classifier.pkl')
 Logistic_clf = joblib.load('model/Logistic_classifier.pkl')
 NB_clf = joblib.load('model/Naive Bayes.pkl')
 bearer_token = "AAAAAAAAAAAAAAAAAAAAAPYVWgEAAAAAidkkoJ72QjFjmNHwoWHb5rtwagE%3DVjHzdiYMqPcEMuCTWmURKcvf2lardEydnKd34QZMrMHtBFcy51"
+tickers = pd.read_csv('Portfolio/Stock_Shortlist.csv')
+StartDate = datetime.today() - relativedelta(years=15) - relativedelta(days=1)
+tickers.sort_values(by='score', ascending=False)
+tickers = tickers.loc[tickers['score'] >= 7]
+tickers = tickers.loc[pd.to_datetime(tickers['IPODate']) <= StartDate]
+tickers =tickers['Symbol'].values.tolist()
+stock = yf.download(tickers, period="max")['Adj Close']
+
+# def Get_data(StartDate):
+#   tickers = pd.read_csv('Stock_Shortlist.csv')
+#   tickers.sort_values(by='score', ascending=False)
+#   tickers = tickers.loc[tickers['score'] >= 7]
+#   tickers = tickers.loc[pd.to_datetime(tickers['IPODate']) <= StartDate]
+#   tickers =tickers['Symbol'].values.tolist()
+#   df = yf.download(tickers, period="max")['Adj Close']
+#   return df
+
+def Portfolio_Optimization(df, upperWeight, lowerWeight):
+  S = risk_models.CovarianceShrinkage(df).ledoit_wolf()
+  mu = expected_returns.capm_return(df)
+  ef = EfficientFrontier(mu, S, weight_bounds=(lowerWeight, upperWeight))
+  raw_weights = ef.max_sharpe(risk_free_rate = 0.01)
+  cleaned_weights = ef.clean_weights()
+  return ef, cleaned_weights
 
 
 def connect_to_endpoint_user(url):
@@ -214,6 +246,44 @@ def twitter():
 def mannul():
     return render_template('mannul.html',title='User Mannul')
 
+@app.route('/portfolio')
+def Portfolio():
+    StartDate = datetime.today() - relativedelta(years=15) - relativedelta(days=1)
+    # stock = Get_data(StartDate)
+    if request.args.get('totalvalue'):
+        total_portfolio_value = float(request.args.get('totalvalue'))
+    else:
+        total_portfolio_value = 20000
+    if request.args.get('upper'):
+        upperWeight = float(request.args.get('upper'))
+    else:
+        upperWeight = 0.2
+    if request.args.get('lower'):
+        lowerWeight = float(request.args.get('lower'))
+    else:
+        lowerWeight = -0.1
+    ef, cleaned_weights = Portfolio_Optimization(stock, upperWeight, lowerWeight)
+    weight = list(cleaned_weights.values())
+    tickers = list(cleaned_weights.keys())
+    performance = ef.portfolio_performance(verbose=True, risk_free_rate = 0.01)
+    latest_prices = stock.iloc[-1]  # prices as of the day you are allocating
+    da = DiscreteAllocation(cleaned_weights, latest_prices, total_portfolio_value=total_portfolio_value, short_ratio=0.3)
+    alloc, leftover = da.lp_portfolio()
+    NoShare = list(alloc.values())
+    NoTicker = list(alloc.keys())
+    return render_template('portfolio.html',title='Portfolio', labels=tickers, values=weight, returns = performance[0], volatility = performance[1], ratio = performance[2], NoShare= NoShare, NoTicker = NoTicker, len=len(alloc))
+    # return render_template('portfolio.html',title='Portfolio Allocation', labels=tickers, values=weight, returns = performance[0], volatility = performance[1], ratio = performance[2])
+
+@app.route('/portfolio/Backtesting')
+def BackTest():
+    backTest = pd.read_csv('Portfolio/BackTest.csv')
+    Duration = backTest['Duration'].tolist()
+    Expectation = backTest['Expected Sharpe Ratio'].tolist()
+    Actual = backTest['Actual Sharpe Ratio'].tolist()
+    IWF = backTest['IWF'].tolist()
+    NDAQ = backTest['NDAQ'].tolist()
+    SPY = backTest['SPY'].tolist()
+    return render_template('backtest.html',title='Back Testing', labels=Duration, Expectation = Expectation, Actual = Actual, IWF = IWF, NDAQ = NDAQ, SPY=SPY)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
